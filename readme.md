@@ -5,7 +5,7 @@
 Setup:
 
 ```bash
-git clone https://github.com/anuragjoshi3519/Drowsiness-Detection-System.git
+git clone https://github.com/aryansin08/Drowsiness-Detection-System.git
 cd Drowsiness-Detection-System
 python3 -m venv env
 source env/bin/activate
