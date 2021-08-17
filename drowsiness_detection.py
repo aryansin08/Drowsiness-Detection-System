@@ -8,13 +8,16 @@ import time
 def drive(start_score = 17, stop_score = 10):
     
     mixer.init()
-    buzzer = mixer.Sound('buzzer.wav')
+    buzzer = mixer.Sound('buzzer.wav') #Putting in the buzzer
 
+    #Already available classifiers to detect a face and both the eyes in the image
+    
+    #Creating a CascadeClassifier Object for the face left eye and the right eye
     face = opencv.CascadeClassifier('haarcascade_files/haarcascade_frontalface_alt.xml')
     leye = opencv.CascadeClassifier('haarcascade_files/haarcascade_lefteye_2splits.xml')
     reye = opencv.CascadeClassifier('haarcascade_files/haarcascade_righteye_2splits.xml')
 
-    model = load_model('cnnCat2.h5')
+    model = load_model('cnnCat2.h5') #loading already trained model
 
     path = os.getcwd()
     cap = opencv.VideoCapture(0)  #0-webcam, displays what is showing on the webcam
@@ -38,17 +41,23 @@ def drive(start_score = 17, stop_score = 10):
 
         gray = opencv.cvtColor(frame, opencv.COLOR_BGR2GRAY)  #converting video to grayscale
 
+	#Scale factor reduceing the size of the face by 10% at each iteration
         faces = list(face.detectMultiScale(gray,minNeighbors=5,scaleFactor=1.1,minSize=(25,25)))
-
+        
+        
+	#if face is found
         if len(faces)!=0:
 
             faces.sort(key = lambda f:f[2]*f[3])
+            
+            #x, y are the starting coordinates of the face window and w, h are the width and height resp.
             x,y,w,h = faces[-1]
 
             opencv.rectangle(frame, (x,y) , (x+w,y+h) , (100,100,100) , 1 )
 
             cropped_face = frame[y:y+h,x:x+w]
 
+            #using only the face rectangle to detect the eyes
             left_eye = leye.detectMultiScale(cropped_face)
             right_eye =  reye.detectMultiScale(cropped_face)
 
